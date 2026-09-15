@@ -31,6 +31,7 @@
 #include "ToneAlarm.h"
 #include "ToshibaLED_I2C.h"
 #include "LP5562.h"
+#include "LP5009.h"
 #include "VRBoard_LED.h"
 #include "DiscreteRGBLed.h"
 #include "DiscoLED.h"
@@ -80,8 +81,14 @@ AP_Notify *AP_Notify::_singleton;
 #define ALL_IS31FL3195_I2C 0
 #endif
 
+#if AP_NOTIFY_LP5009_ENABLED
+#define ALL_LP5009_I2C (Notify_LED_LP5009_I2C_Internal | Notify_LED_LP5009_I2C_External)
+#else
+#define ALL_LP5009_I2C 0
+#endif
+
 // all I2C_LEDS
-#define I2C_LEDS (ALL_TOSHIBALED_I2C | ALL_NCP5623_I2C | ALL_LP5562_I2C | ALL_IS31FL3195_I2C)
+#define I2C_LEDS (ALL_TOSHIBALED_I2C | ALL_NCP5623_I2C | ALL_LP5562_I2C | ALL_IS31FL3195_I2C | ALL_LP5009_I2C)
 
 #if AP_NOTIFY_DRONECAN_LED_ENABLED
 #define DRONECAN_LEDS Notify_LED_DroneCAN
@@ -182,7 +189,7 @@ const AP_Param::GroupInfo AP_Notify::var_info[] = {
     // @Param: LED_TYPES
     // @DisplayName: LED Driver Types
     // @Description: Controls what types of LEDs will be enabled
-    // @Bitmask: 0:Built-in LED, 1:Internal ToshibaLED, 2:External ToshibaLED, 3:External PCA9685, 4:Oreo LED, 5:DroneCAN, 6:NCP5623 External, 7:NCP5623 Internal, 8:NeoPixel, 9:ProfiLED, 10:Scripting, 11:DShot, 12:ProfiLED_SPI, 13:LP5562 External, 14: LP5562 Internal, 15:IS31FL3195 External, 16: IS31FL3195 Internal, 17: DiscreteRGB, 18: NeoPixelRGB, 19:ProfiLED_IOMCU
+    // @Bitmask: 0:Built-in LED, 1:Internal ToshibaLED, 2:External ToshibaLED, 3:External PCA9685, 4:Oreo LED, 5:DroneCAN, 6:NCP5623 External, 7:NCP5623 Internal, 8:NeoPixel, 9:ProfiLED, 10:Scripting, 11:DShot, 12:ProfiLED_SPI, 13:LP5562 External, 14: LP5562 Internal, 15:IS31FL3195 External, 16: IS31FL3195 Internal, 17: DiscreteRGB, 18: NeoPixelRGB, 19:ProfiLED_IOMCU, 20:LP5009 External, 21:LP5009 Internal
     // @User: Advanced
     AP_GROUPINFO("LED_TYPES", 6, AP_Notify, _led_type, DEFAULT_NTF_LED_TYPES),
 
@@ -373,6 +380,18 @@ void AP_Notify::add_backends(void)
             case Notify_LED_IS31FL3195_I2C_Internal:
                 FOREACH_I2C_INTERNAL(b) {
                     ADD_BACKEND(NEW_NOTHROW IS31FL3195(b, 0x54));
+                }
+                break;
+#endif
+#if AP_NOTIFY_LP5009_ENABLED
+            case Notify_LED_LP5009_I2C_External:
+                FOREACH_I2C_EXTERNAL(b) {
+                    ADD_BACKEND(NEW_NOTHROW LP5009(b, 0x14));
+                }
+                break;
+            case Notify_LED_LP5009_I2C_Internal:
+                FOREACH_I2C_INTERNAL(b) {
+                    ADD_BACKEND(NEW_NOTHROW LP5009(b, 0x14));
                 }
                 break;
 #endif

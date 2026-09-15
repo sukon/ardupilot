@@ -36,6 +36,7 @@
 #include "SIM_RF_LightWare_GRF_I2C.h"
 #include "SIM_LM2755.h"
 #include "SIM_LP5562.h"
+#include "SIM_LP5009.h"
 #include "SIM_MaxSonarI2CXL.h"
 #include "SIM_MS5525.h"
 #include "SIM_MS5611.h"
@@ -109,6 +110,9 @@ static MS5611 ms5611;
 #endif
 #if AP_SIM_LP5562_ENABLED
 static LP5562 lp5562;
+#endif
+#if AP_SIM_LP5009_ENABLED
+static LP5009 lp5009;
 #endif
 #if AP_SIM_LM2755_ENABLED
 static LM2755 lm2755;
@@ -201,6 +205,9 @@ struct i2c_device_at_address {
 #endif
 #if AP_SIM_LP5562_ENABLED
     { 2, 0x30, lp5562 },        // LP5562 RGB LED driver
+#endif
+#if AP_SIM_LP5009_ENABLED
+    { 2, 0x14, lp5009 },        // LP5009 RGB LED driver
 #endif
 #if AP_SIM_LM2755_ENABLED
     { 2, 0x67, lm2755 },        // LM2755 RGB LED driver

@@ -104,6 +104,10 @@ public:
 #if HAL_WITH_IO_MCU && AP_IOMCU_PROFILED_SUPPORT_ENABLED
         Notify_LED_ProfiLED_IOMCU           = (1 << 19), // ProfiLED IOMCU
 #endif
+#if AP_NOTIFY_LP5009_ENABLED
+        Notify_LED_LP5009_I2C_External      = (1 << 20), // LP5009
+        Notify_LED_LP5009_I2C_Internal      = (1 << 21), // LP5009
+#endif
         Notify_LED_MAX
     };
 
