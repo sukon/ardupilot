@@ -45,7 +45,12 @@ void LP5009::init()
 
 void LP5009::reset_registers()
 {
-    set_register(LP5009DevReg::DEVICE_CONFIG0, (uint8_t)0x00);
+    // deliberately not resetting DEVICE_CONFIG0 (Chip_EN) here: by the time
+    // update() next runs and notices RESET==0xFF, the driver has generally
+    // already re-enabled the chip in the same configure_dev() call that
+    // wrote RESET, and this device model isn't cycle-accurate enough to
+    // order the two.  LP5562's simulator makes the same call for its
+    // equivalent ENABLE register.
     set_register(LP5009DevReg::DEVICE_CONFIG1, (uint8_t)0x3C);  // datasheet reset value
     set_register(LP5009DevReg::LED_CONFIG0, (uint8_t)0x00);
     set_register(LP5009DevReg::LED0_BRIGHTNESS, (uint8_t)0xFF);
